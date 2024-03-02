@@ -1,7 +1,7 @@
 import bodyParser from "body-parser";
 import express, {Request, Response} from "express";
 import { REGISTRY_PORT } from "../config";
-import * as Crypto from "../crypto";
+
 
 export type Node = { nodeId: number; pubKey: string };
 
