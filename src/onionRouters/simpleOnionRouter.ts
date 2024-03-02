@@ -11,6 +11,7 @@ export async function simpleOnionRouter(nodeId: number) {
   onionRouter.use(express.json());
   onionRouter.use(bodyParser.json());
 
+
   // TODO implement the status route
   onionRouter.get("/status", (req, res) => {
     res.status(200).send('live');
@@ -35,6 +36,9 @@ export async function simpleOnionRouter(nodeId: number) {
         BASE_ONION_ROUTER_PORT + nodeId
       }`
     );
+    //on appelle le post
+
+
   });
 
   return server;

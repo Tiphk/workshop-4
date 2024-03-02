@@ -1,6 +1,7 @@
 import bodyParser from "body-parser";
-import express, { Request, Response } from "express";
+import express, {Request, Response} from "express";
 import { REGISTRY_PORT } from "../config";
+import * as Crypto from "../crypto";
 
 export type Node = { nodeId: number; pubKey: string };
 
@@ -13,15 +14,36 @@ export type GetNodeRegistryBody = {
   nodes: Node[];
 };
 
+
 export async function launchRegistry() {
   const _registry = express();
   _registry.use(express.json());
   _registry.use(bodyParser.json());
 
+  let nodeRegistry: GetNodeRegistryBody = {nodes: []} ; //notre liste de nodes
+
   // TODO implement the status route
   _registry.get('/status', (req, res) => {
     res.send('live');
   });
+
+  _registry.post('/registerNode', (req, res) => {
+    const { nodeId, pubKey } = req.body;
+    nodeRegistry.nodes.push({ nodeId, pubKey });
+    return res.status(200).json({ result: "ok" });
+  });
+
+  _registry.get('/getNodeRegistry', (req, res) => {
+    res.json(nodeRegistry);
+  });
+
+  _registry.get('/getPrivateKey/:nodeId', (req, res) => {
+    const { nodeId } = req.params;
+    //const test = Crypto.exportPrvKey()
+    res.send('live');
+
+  });
+
 
   const server = _registry.listen(REGISTRY_PORT, () => {
     console.log(`registry is listening on port ${REGISTRY_PORT}`);

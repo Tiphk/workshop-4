@@ -24,21 +24,45 @@ type GenerateRsaKeyPair = {
   publicKey: webcrypto.CryptoKey;
   privateKey: webcrypto.CryptoKey;
 };
+
 export async function generateRsaKeyPair(): Promise<GenerateRsaKeyPair> {
   // TODO implement this function using the crypto package to generate a public and private RSA key pair.
   //      the public key should be used for encryption and the private key for decryption. Make sure the
   //      keys are extractable.
 
-  // remove this
-  return { publicKey: {} as any, privateKey: {} as any };
+  try {
+    // Generate an RSA key pair
+    const { publicKey, privateKey } = await crypto.subtle.generateKey(
+        {
+          name: "RSA-OAEP",
+          modulusLength: 2048,
+          publicExponent: new Uint8Array([0x01, 0x00, 0x01]),
+          hash: "SHA-256",
+        },
+        true,
+        ["encrypt", "decrypt"]
+    );
+
+    return { publicKey, privateKey };
+  } catch (error) {
+    console.error('Error generating RSA key pair:', error);
+    throw error; // Optionally, rethrow the error to handle it elsewhere
+  }
+
 }
 
 // Export a crypto public key to a base64 string format
 export async function exportPubKey(key: webcrypto.CryptoKey): Promise<string> {
   // TODO implement this function to return a base64 string version of a public key
-
-  // remove this
-  return "";
+  try {
+    const exportedKey = await crypto.subtle.exportKey("spki", key);
+    const exportedKeyBase64 = arrayBufferToBase64(exportedKey);
+    return exportedKeyBase64;
+  }
+  catch (error) {
+    console.error("Error exporting public key:", error);
+    return "";
+  }
 }
 
 // Export a crypto private key to a base64 string format
@@ -46,9 +70,21 @@ export async function exportPrvKey(
   key: webcrypto.CryptoKey | null
 ): Promise<string | null> {
   // TODO implement this function to return a base64 string version of a private key
+  if (!key) {
+    return null;
+  }
+  try {
+    const exportedKey = await crypto.subtle.exportKey("pkcs8", key);
+    const exportedKeyBuffer = new Uint8Array(exportedKey);
+    const exportedKeyBase64 = arrayBufferToBase64(exportedKeyBuffer);
 
-  // remove this
-  return "";
+    return exportedKeyBase64;
+  }
+  catch (error) {
+    console.error("Error exporting private key:", error);
+    return null;
+  }
+
 }
 
 // Import a base64 string public key to its native format
