@@ -4,14 +4,15 @@ import { BASE_ONION_ROUTER_PORT,REGISTRY_PORT } from "../config";
 import * as Crypto from "../crypto";
 import {error} from "console";
 
-let lastReceivedEncryptedMessage: string | null = null;
-let lastReceivedDecryptedMessage: string | null = null;
-let lastMessageDestination: number | null = null;
 
 export async function simpleOnionRouter(nodeId: number) {
   const onionRouter = express();
   onionRouter.use(express.json());
   onionRouter.use(bodyParser.json());
+
+  let lastReceivedEncryptedMessage: string | null = null;
+  let lastReceivedDecryptedMessage: string | null = null;
+  let lastMessageDestination: number | null = null;
 
   const { publicKey, privateKey } = await Crypto.generateRsaKeyPair();
   const publicKeyBase64 = await Crypto.exportPubKey(publicKey);

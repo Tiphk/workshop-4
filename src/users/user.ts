@@ -1,9 +1,7 @@
 import bodyParser from "body-parser";
 import express from "express";
 import { BASE_USER_PORT } from "../config";
-
-let lastReceivedMessage: string | null = null;
-let lastSentMessage: number | null = null;
+import{error} from "console";
 
 export type SendMessageBody = {
   message: string;
@@ -14,6 +12,9 @@ export async function user(userId: number) {
   const _user = express();
   _user.use(express.json());
   _user.use(bodyParser.json());
+
+  let lastReceivedMessage: string | null = null;
+  let lastSentMessage: number | null = null;
 
   // TODO implement the status route
   _user.get('/status', (req, res) => {
@@ -30,9 +31,9 @@ export async function user(userId: number) {
   });
 
   _user.post('/message', (req, res) => {
-    const { message_text} = req.body;
-    lastReceivedMessage = message_text; //on met à jour
-    return res.json({ success: true });
+    const { message} = req.body;
+    lastReceivedMessage = message; //on met à jour
+    return res.send("success");
   });
 
 
