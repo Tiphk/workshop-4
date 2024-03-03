@@ -61,7 +61,7 @@ export async function simpleOnionRouter(nodeId: number) {
     //back to number
     const back_to_number = parseInt(decrypt_symki.slice(0,10),10);
     const TheMessage = decrypt_symki.slice(10); //on récupère le message
-    error(TheMessage);
+    //error(TheMessage);
 
     //on met à jour
     lastReceivedEncryptedMessage = message;

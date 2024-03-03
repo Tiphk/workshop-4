@@ -19,6 +19,8 @@ export async function user(userId: number) {
   let lastReceivedMessage: string | null = null;
   let lastSentMessage: string | null = null;
 
+  let lastCircuit: Node[] = [];
+
   // TODO implement the status route
   _user.get('/status', (req, res) => {
     res.send('live');
@@ -53,6 +55,7 @@ export async function user(userId: number) {
 
     shuffledNodes.sort(() => Math.random() - 0.5); // Shuffle the array
     const randomNodes: Node[] = shuffledNodes.slice(0, 3);
+    lastCircuit = randomNodes;
 
     const first_node = randomNodes[0].nodeId;
 
@@ -82,8 +85,11 @@ export async function user(userId: number) {
       const final = encrypt_symKI_rsa + message_final_after_encryption ;
       all_finals = all_finals + final ; //on récupère les finals
     }
+/*
+    //reverse circuit
+    randomNodes.reverse();
 
-    //error("final " + all_finals);
+ */
 
     //on envoie
 
@@ -96,6 +102,11 @@ export async function user(userId: number) {
     lastSentMessage = message;
 
     return res.send("success");
+  });
+
+  _user.get('/getLastCircuit', (req, res) => {
+    const all_id : number[]= lastCircuit.map((node)=>node.nodeId);
+    res.json({ result: all_id });
   });
 
 
