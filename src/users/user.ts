@@ -17,7 +17,7 @@ export async function user(userId: number) {
   _user.use(bodyParser.json());
 
   let lastReceivedMessage: string | null = null;
-  let lastSentMessage: number | null = null;
+  let lastSentMessage: string | null = null;
 
   // TODO implement the status route
   _user.get('/status', (req, res) => {
@@ -83,7 +83,7 @@ export async function user(userId: number) {
       all_finals = all_finals + final ; //on récupère les finals
     }
 
-    error("final " + all_finals);
+    //error("final " + all_finals);
 
     //on envoie
 
@@ -92,6 +92,8 @@ export async function user(userId: number) {
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({message: all_finals})
     });
+
+    lastSentMessage = message;
 
     return res.send("success");
   });

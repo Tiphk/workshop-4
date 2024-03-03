@@ -3,6 +3,7 @@ import express from "express";
 import { BASE_ONION_ROUTER_PORT,REGISTRY_PORT } from "../config";
 import * as Crypto from "../crypto";
 import {error} from "console";
+import {rsaDecrypt, symDecrypt} from "../crypto";
 
 
 export async function simpleOnionRouter(nodeId: number) {
@@ -52,9 +53,27 @@ export async function simpleOnionRouter(nodeId: number) {
 
     //on fait dans l'autre sens
     //decrypt rsa
+    const decrypt_rsa = await Crypto.rsaDecrypt(message.slice(0,344),privateKey);
 
     //decrypt symki
+    const decrypt_symki = await Crypto.symDecrypt(decrypt_rsa, message.slice(344));
 
+    //back to number
+    const back_to_number = parseInt(decrypt_symki.slice(0,10),10);
+    const TheMessage = decrypt_symki.slice(10); //on récupère le message
+    error(TheMessage);
+
+    //on met à jour
+    lastReceivedEncryptedMessage = message;
+    lastReceivedDecryptedMessage = TheMessage;
+    lastMessageDestination = back_to_number;
+
+    //on appelle la suite
+    await fetch(`http://localhost:${back_to_number}/message`,{
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({message: TheMessage})
+    });
 
     res.json({success: true});
   });
