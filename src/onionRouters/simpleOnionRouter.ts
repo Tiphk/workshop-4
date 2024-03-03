@@ -47,6 +47,18 @@ export async function simpleOnionRouter(nodeId: number) {
     res.json({result: privateKeyBase64});
   });
 
+  onionRouter.post('/message', async (req, res) => {
+    const {message} = req.body;
+
+    //on fait dans l'autre sens
+    //decrypt rsa
+
+    //decrypt symki
+
+
+    res.json({success: true});
+  });
+
   // @ts-ignore
   const server = onionRouter.listen(BASE_ONION_ROUTER_PORT + nodeId, () => {
     console.log(
