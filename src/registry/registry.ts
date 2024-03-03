@@ -1,7 +1,7 @@
 import bodyParser from "body-parser";
 import express, {Request, Response} from "express";
 import { REGISTRY_PORT } from "../config";
-
+import * as Crypto from "../crypto";
 
 export type Node = { nodeId: number; pubKey: string };
 
@@ -37,12 +37,6 @@ export async function launchRegistry() {
     res.json(nodeRegistry);
   });
 
-  _registry.get('/getPrivateKey/:nodeId', (req, res) => {
-    const { nodeId } = req.params;
-    //const test = Crypto.exportPrvKey()
-    res.send('live');
-
-  });
 
 
   const server = _registry.listen(REGISTRY_PORT, () => {

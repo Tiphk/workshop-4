@@ -2,6 +2,7 @@ import bodyParser from "body-parser";
 import express from "express";
 import { BASE_ONION_ROUTER_PORT,REGISTRY_PORT } from "../config";
 import * as Crypto from "../crypto";
+import {error} from "console";
 
 let lastReceivedEncryptedMessage: string | null = null;
 let lastReceivedDecryptedMessage: string | null = null;
@@ -22,7 +23,6 @@ export async function simpleOnionRouter(nodeId: number) {
     privateKey: privateKeyBase64
   };
 
-
   // TODO implement the status route
   onionRouter.get("/status", (req, res) => {
     res.status(200).send('live');
@@ -39,6 +39,11 @@ export async function simpleOnionRouter(nodeId: number) {
 
   onionRouter.get("/getLastMessageDestination", (req, res) => {
       res.json({ result: lastMessageDestination });
+  });
+
+  onionRouter.get('/getPrivateKey', (req, res) => {
+    //error(privateKeyBase64 + "\n");
+    res.json({result: privateKeyBase64});
   });
 
   // @ts-ignore
