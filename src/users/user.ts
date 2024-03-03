@@ -29,6 +29,12 @@ export async function user(userId: number) {
     res.json({ result: lastSentMessage });
   });
 
+  _user.post('/message', (req, res) => {
+    const { message_text} = req.body;
+    lastReceivedMessage = message_text; //on met à jour
+    return res.json({ success: true });
+  });
+
 
   const server = _user.listen(BASE_USER_PORT + userId, () => {
     console.log(

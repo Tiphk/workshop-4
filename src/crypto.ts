@@ -134,8 +134,6 @@ export async function rsaEncrypt(
   // TODO implement this function to encrypt a base64 encoded message with a public key
   // tip: use the provided base64ToArrayBuffer function
 
-
-
     const dataBuffer = base64ToArrayBuffer(b64Data);
     const publicKey = await importPubKey(strPublicKey);
     const encryptedBuffer = await webcrypto.subtle.encrypt(
@@ -211,7 +209,7 @@ export async function importSymKey(
         "raw",
         keyBuffer,
         { name: "AES-CBC" },
-        false,
+        true,
         ["encrypt", "decrypt"]
     );
     return importedKey;
